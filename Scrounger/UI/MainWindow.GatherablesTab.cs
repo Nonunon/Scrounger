@@ -65,10 +65,15 @@ public partial class MainWindow
             selectorCurrent.Fallback = fallback;
         }
         DrawPresetSelector(selectorCurrent);
+        ImGui.EndGroup();
         ImGui.Separator();
         ImGui.BeginGroup();
 
-        ImGui.BeginTable("##gatherablesTable", 6, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg);
+        if (!ImGui.BeginTable("##gatherablesTable", 6, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg))
+        {
+            ImGui.EndGroup();
+            return;
+        }
         ImGui.TableSetupColumn("Item");
         ImGui.TableSetupColumn("Availability");
         ImGui.TableSetupColumn("Preferred Location");

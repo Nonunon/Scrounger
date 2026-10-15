@@ -19,10 +19,10 @@ public class Scrounger :IDalamudPlugin
 
     private readonly MainWindow _mainWindow;
 
-    public static Config Config;
+    public static Config Config = null!;
     public static Logger Log = new();
-    public static WorldData WorldData = new(Svc.Data, Log);
-    public static SeTime Time = new();
+    public static WorldData WorldData = null!;
+    public static SeTime Time = null!;
 
     public readonly AutoGatherListsManager AutoGatherListsManager;
     public readonly AutoGather.AutoGather AutoGather;
@@ -30,6 +30,10 @@ public class Scrounger :IDalamudPlugin
     public Scrounger(IDalamudPluginInterface pluginInterface)
     {
         ECommonsMain.Init(pluginInterface, this, Module.DalamudReflector);
+
+        // These depend on Svc, so they must be created after ECommons is initialized
+        WorldData = new(Svc.Data, Log);
+        Time = new();
 
         Config = Config.Load();
         AutoGatherListsManager = AutoGatherListsManager.Load();
@@ -63,6 +67,16 @@ public class Scrounger :IDalamudPlugin
 
     public void Dispose()
     {
+        Svc.Framework.Update -= AutoGather.DoAutoGather;
+        Svc.PluginInterface.UiBuilder.OpenMainUi -= OpenMainUi;
+        Svc.PluginInterface.UiBuilder.Draw -= _windowSystem.Draw;
+        _windowSystem.RemoveAllWindows();
+
+        // Stops navigation and pending tasks so nothing keeps running after unload
+        AutoGather.Enabled = false;
+        AutoGather.Dispose();
+        Time.Dispose();
+
         ECommonsMain.Dispose();
     }
 }

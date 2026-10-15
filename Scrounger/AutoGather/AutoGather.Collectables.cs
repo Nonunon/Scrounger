@@ -3,7 +3,7 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using GatherBuddy.Classes;
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using Scrounger.Utils.Extensions;
 
 //Credit: https://github.com/FFXIV-CombatReborn/GatherBuddyReborn/blob/main/GatherBuddy/AutoGather/AutoGather.Collectables.cs
@@ -12,6 +12,35 @@ namespace Scrounger.AutoGather
     public partial class AutoGather
     {
         private CollectableRotation? CurrentCollectableRotation;
+
+        // GatheringMasterpiece AtkValue indices, matching GatherBuddyReborn's GatheringMasterpieceReader
+        private static class MasterpieceValue
+        {
+            public const int Collectability   = 13;
+            public const int ScourGain        = 48;
+            public const int BrazenGainMin    = 49;
+            public const int MeticulousGain   = 51;
+            public const int IntegrityCurrent = 62;
+            public const int IntegrityMax     = 63;
+            public const int LowThreshold     = 65;
+            public const int MidThreshold     = 66;
+            public const int HighThreshold    = 67;
+        }
+
+        private static unsafe int? ReadMasterpieceValue(AddonGatheringMasterpiece* addon, int index)
+        {
+            var unit = &addon->AtkUnitBase;
+            if (unit->AtkValues == null || index >= unit->AtkValuesCount)
+                return null;
+
+            var value = unit->AtkValues[index];
+            return value.Type switch
+            {
+                AtkValueType.UInt => (int)value.UInt,
+                AtkValueType.Int  => value.Int,
+                _                 => null,
+            };
+        }
 
         private unsafe partial class CollectableRotation
         {
@@ -28,9 +57,6 @@ namespace Scrounger.AutoGather
             private readonly Gatherable item;
             private readonly uint quantity;
 
-            [GeneratedRegex(@"\d+")]
-            private static partial Regex NumberRegex();
-
             public Actions.BaseAction GetNextAction(AddonGatheringMasterpiece* MasterpieceAddon)
             {
                 var itemsLeft = (int)(quantity - item.GetInventoryCount());
@@ -38,13 +64,12 @@ namespace Scrounger.AutoGather
                 if (itemsLeft <= 0 && Scrounger.Config.AbandonNodes)
                     throw new NoGatherableItemsInNodeException();
 
-                var regex = NumberRegex();
-                int collectability   = int.Parse(MasterpieceAddon->AtkUnitBase.GetTextNodeById(6)->NodeText.ToString());
-                int currentIntegrity = int.Parse(MasterpieceAddon->AtkUnitBase.GetTextNodeById(126)->NodeText.ToString());
-                int maxIntegrity     = int.Parse(MasterpieceAddon->AtkUnitBase.GetTextNodeById(129)->NodeText.ToString());
-                int scourColl        = int.Parse(regex.Match(MasterpieceAddon->AtkUnitBase.GetTextNodeById(84)->NodeText.ToString()).Value);
-                int meticulousColl   = int.Parse(regex.Match(MasterpieceAddon->AtkUnitBase.GetTextNodeById(108)->NodeText.ToString()).Value);
-                int brazenColl       = int.Parse(regex.Match(MasterpieceAddon->AtkUnitBase.GetTextNodeById(93)->NodeText.ToString()).Value);
+                int collectability   = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.Collectability) ?? 0;
+                int currentIntegrity = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.IntegrityCurrent) ?? 0;
+                int maxIntegrity     = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.IntegrityMax) ?? 0;
+                int scourColl        = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.ScourGain) ?? 0;
+                int meticulousColl   = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.MeticulousGain) ?? 0;
+                int brazenColl       = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.BrazenGainMin) ?? 0;
 
                 if (ShouldUseWise(currentIntegrity, maxIntegrity))
                     return Actions.Wise;
@@ -97,22 +122,22 @@ namespace Scrounger.AutoGather
                 if (config.CollectableManualScores)
                     return (config.CollectableTargetScore, config.CollectableMinScore);
 
-                var regex = NumberRegex();
                 int targetScore, minScore;
+                var lowScore = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.LowThreshold) ?? 0;
 
-                // Check nodes in descending order (15, 14, 13) and use the first visible one for target score
+                // Check threshold markers in descending order (15, 14, 13) and use the first visible one for target score
                 if (MasterpieceAddon->AtkUnitBase.GetNodeById(15)->IsVisible())
-                    targetScore = int.Parse(regex.Match(MasterpieceAddon->AtkUnitBase.GetComponentByNodeId(15)->GetTextNodeById(3)->GetAsAtkTextNode()->NodeText.ToString()).Value);
+                    targetScore = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.HighThreshold) ?? lowScore;
                 else if (MasterpieceAddon->AtkUnitBase.GetNodeById(14)->IsVisible())
-                    targetScore = int.Parse(regex.Match(MasterpieceAddon->AtkUnitBase.GetComponentByNodeId(14)->GetTextNodeById(3)->GetAsAtkTextNode()->NodeText.ToString()).Value);
+                    targetScore = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.MidThreshold) ?? lowScore;
                 else
-                    targetScore = int.Parse(regex.Match(MasterpieceAddon->AtkUnitBase.GetComponentByNodeId(13)->GetTextNodeById(3)->GetAsAtkTextNode()->NodeText.ToString()).Value);
+                    targetScore = lowScore;
 
                 // For custom deliveries and quest items, we always want max collectability
                 if (item.GatheringData.Unknown3 is 3 or 4 or 6)
                     minScore = targetScore;
                 else
-                    minScore = int.Parse(regex.Match(MasterpieceAddon->AtkUnitBase.GetComponentByNodeId(13)->GetTextNodeById(3)->GetAsAtkTextNode()->NodeText.ToString()).Value);
+                    minScore = lowScore;
 
                 return (targetScore, minScore);
             }

@@ -275,31 +275,13 @@ namespace Scrounger.AutoGather
             if (MasterpieceAddon == null || CurrentCollectableRotation == null)
                 return;
 
-            var textNode = MasterpieceAddon->AtkUnitBase.GetTextNodeById(6);
-            if (textNode == null)
-                return;
-            var text = textNode->NodeText.ToString();
+            var collectibility = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.Collectability);
+            var integrity      = ReadMasterpieceValue(MasterpieceAddon, MasterpieceValue.IntegrityCurrent);
 
-            var integrityNode = MasterpieceAddon->AtkUnitBase.GetTextNodeById(126);
-            if (integrityNode == null)
-                return;
-            var integrityText = integrityNode->NodeText.ToString();
-
-            if (!int.TryParse(text, out var collectibility))
+            if (collectibility is { } coll && integrity is { } integ)
             {
-                collectibility = 99999; // default value
-            }
-
-            if (!int.TryParse(integrityText, out var integrity))
-            {
-                collectibility = 99999;
-                integrity      = 99999;
-            }
-
-            if (collectibility < 99999)
-            {
-                LastCollectability = collectibility;
-                LastIntegrity      = integrity;
+                LastCollectability = coll;
+                LastIntegrity      = integ;
 
                 var collectibleAction = CurrentCollectableRotation.GetNextAction(MasterpieceAddon);
 

@@ -4,6 +4,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using GatherBuddy.Classes;
 using System.Linq;
 using System.Runtime.InteropServices;
+using ECommons.Automation;
 using ECommons.Automation.UIInput;
 using ItemSlot = Scrounger.AutoGather.GatheringTracker.ItemSlot;
 using Dalamud.Game.ClientState.Conditions;
@@ -39,15 +40,12 @@ namespace Scrounger.AutoGather
                 CurrentCollectableRotation = new CollectableRotation(GetConfigPreset(presetId), slot.Item, _activeItemList.FirstOrDefault(x => x.Item == slot.Item).Quantity);
             }
 
-            var itemIndex           = slot.Index;
-            var receiveEventAddress = new nint(gatheringAddon->AtkUnitBase.AtkEventListener.VirtualTable->ReceiveEvent);
-            var eventDelegate       = Marshal.GetDelegateForFunctionPointer<ClickHelper.ReceiveEventDelegate>(receiveEventAddress);
-
-            var target    = AtkStage.Instance();
-            var eventData = EventData.ForNormalTarget(target, &gatheringAddon->AtkUnitBase);
-            var inputData = InputData.Empty();
-
-            EnqueueActionWithDelay(() => eventDelegate.Invoke(&gatheringAddon->AtkUnitBase.AtkEventListener, EventType.CHANGE, (uint)itemIndex, eventData.Data, inputData.Data));
+            var itemIndex = slot.Index;
+            EnqueueActionWithDelay(() =>
+            {
+                if (GatheringAddon is var addon and not null)
+                    Callback.Fire(&addon->AtkUnitBase, true, itemIndex, 0);
+            });
 
             if (slot.Item.IsTreasureMap())
             {

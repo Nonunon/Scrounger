@@ -1,71 +1,33 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Dalamud.NET.Sdk/15.0.0">
 
     <PropertyGroup>
-        <TargetFramework>net9.0-windows7.0</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <DalamudLibPath>$(AppData)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-    </PropertyGroup>
-
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="12.0.0"/>
         <PackageReference Include="OpenTK" Version="5.0.0-pre.13" />
-        <PackageReference Include="System.Windows.Extensions" Version="10.0.0-preview.2.25163.2" />
-        <Reference Include="Dalamud">
-            <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="ImGui.NET">
-            <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="ImGuiScene">
-            <HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Lumina">
-            <HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Lumina.Excel">
-            <HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="FFXIVClientStructs">
-            <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Newtonsoft.Json">
-            <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="InteropGenerator.Runtime">
-            <HintPath>$(DalamudLibPath)InteropGenerator.Runtime.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
+        <PackageReference Include="System.Windows.Extensions" Version="10.0.0" />
     </ItemGroup>
 
-<ItemGroup>
-<ProjectReference Include="..\ECommons\ECommons\ECommons.csproj"/>
-<ProjectReference Include="..\GatherBuddy\GatherBuddy.GameData\GatherBuddy.GameData.csproj"/>
-<ProjectReference Include="..\GatherBuddy\OtterGui\OtterGui.csproj"/>
-</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj"/>
+        <ProjectReference Include="..\GatherBuddy\GatherBuddy.GameData\GatherBuddy.GameData.csproj"/>
+        <ProjectReference Include="..\GatherBuddy\OtterGui\OtterGui.csproj"/>
+    </ItemGroup>
 
-<ItemGroup>
-  <None Remove="Data\node_offsets.json" />
-  <EmbeddedResource Include="Data\node_offsets.json" />
-  <None Remove="Data\world_locations.json" />
-  <EmbeddedResource Include="Data\world_locations.json" />
-  <None Remove="Data\IlvConvertTable.csv" />
-  <EmbeddedResource Include="Data\IlvConvertTable.csv" />
-  <Compile Remove="AutoGather\AutoGather.Ui.cs" />
-  <None Include="AutoGather\AutoGather.Ui.cs" />
-  <None Remove="Data\honk-sound.wav" />
-  <EmbeddedResource Include="Data\honk-sound.wav" />
-</ItemGroup>
+    <ItemGroup>
+        <None Remove="Data\node_offsets.json" />
+        <EmbeddedResource Include="Data\node_offsets.json" />
+        <None Remove="Data\world_locations.json" />
+        <EmbeddedResource Include="Data\world_locations.json" />
+        <None Remove="Data\IlvConvertTable.csv" />
+        <EmbeddedResource Include="Data\IlvConvertTable.csv" />
+        <Compile Remove="AutoGather\AutoGather.Ui.cs" />
+        <None Include="AutoGather\AutoGather.Ui.cs" />
+        <None Remove="Data\honk-sound.wav" />
+        <EmbeddedResource Include="Data\honk-sound.wav" />
+    </ItemGroup>
 
-        </Project>
+</Project>

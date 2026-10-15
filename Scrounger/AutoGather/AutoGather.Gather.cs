@@ -51,8 +51,8 @@ namespace Scrounger.AutoGather
 
             if (slot.Item.IsTreasureMap())
             {
-                TaskManager.Enqueue(() => Svc.Condition[ConditionFlag.Gathering42], 1000);
-                TaskManager.Enqueue(() => !Svc.Condition[ConditionFlag.Gathering42]);
+                TaskManager.Enqueue(() => Svc.Condition[ConditionFlag.ExecutingGatheringAction], 1000);
+                TaskManager.Enqueue(() => !Svc.Condition[ConditionFlag.ExecutingGatheringAction]);
                 TaskManager.Enqueue(DiscipleOfLand.RefreshNextTreasureMapAllowance);
             }
         }

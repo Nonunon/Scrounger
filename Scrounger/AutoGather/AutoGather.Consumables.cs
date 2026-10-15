@@ -54,7 +54,7 @@ namespace Scrounger.AutoGather
 
         private static bool IsItemCordial(Item item)
         {
-            return item.ItemAction.ValueNullable?.Type == 1055;
+            return item.ItemAction.ValueNullable?.Action.RowId == 1055;
         }
 
         private static bool IsItemDoLFood(Item item)
@@ -77,7 +77,7 @@ namespace Scrounger.AutoGather
         {
             if (item.ItemUICategory.RowId != 63)
                 return false;
-            return item.ItemAction.ValueNullable?.Type == 816 && item.ItemAction.ValueNullable?.Data[0] is 302 or 303 or 1752 or 5330;
+            return item.ItemAction.ValueNullable?.Action.RowId == 816 && item.ItemAction.ValueNullable?.Data[0] is 302 or 303 or 1752 or 5330;
         }
 
         private static bool IsItemDoLSquadronManual(Item item)
@@ -101,7 +101,7 @@ namespace Scrounger.AutoGather
 
         public unsafe bool GetIsFoodBuffUp(uint itemId)
         {
-            var buff = Svc.ClientState?.LocalPlayer?.StatusList.FirstOrDefault(s => s.StatusId == 48);
+            var buff = Svc.Objects.LocalPlayer?.StatusList.FirstOrDefault(s => s.StatusId == 48);
             if (buff == null)
             {
                 return false;
@@ -122,7 +122,7 @@ namespace Scrounger.AutoGather
 
         public unsafe bool GetIsPotionBuffUp(uint itemId)
         {
-            var buff = Svc.ClientState?.LocalPlayer?.StatusList.FirstOrDefault(s => s.StatusId == 49);
+            var buff = Svc.Objects.LocalPlayer?.StatusList.FirstOrDefault(s => s.StatusId == 49);
             if (buff == null)
             {
                 return false;
@@ -141,13 +141,13 @@ namespace Scrounger.AutoGather
             }
         }
 
-        public unsafe bool IsManualBuffUp => Svc.ClientState?.LocalPlayer?.StatusList.Any(s => s.StatusId == 46) ?? false;
+        public unsafe bool IsManualBuffUp => Svc.Objects.LocalPlayer?.StatusList.Any(s => s.StatusId == 46) ?? false;
 
         public unsafe bool GetIsSquadronManualBuffUp(uint itemId)
         {
             if (SquadronManualItemIdBuffId.TryGetValue(itemId, out var requiredBuffId))
             {
-                return Svc.ClientState?.LocalPlayer?.StatusList.Any(s => s.StatusId == requiredBuffId) ?? false;
+                return Svc.Objects.LocalPlayer?.StatusList.Any(s => s.StatusId == requiredBuffId) ?? false;
             }
             else
             {
@@ -159,7 +159,7 @@ namespace Scrounger.AutoGather
         {
             if (SquadronPassItemIdBuffId.TryGetValue(itemId, out var requiredBuffId))
             {
-                return Svc.ClientState?.LocalPlayer?.StatusList.Any(s => s.StatusId == requiredBuffId) ?? false;
+                return Svc.Objects.LocalPlayer?.StatusList.Any(s => s.StatusId == requiredBuffId) ?? false;
             }
             else
             {

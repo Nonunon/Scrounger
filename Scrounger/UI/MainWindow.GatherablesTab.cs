@@ -4,7 +4,7 @@ using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
 using GatherBuddy.Classes;
 using GatherBuddy.Time;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using OtterGui;
 using OtterGui.Raii;
 using Scrounger.AutoGather.Lists;

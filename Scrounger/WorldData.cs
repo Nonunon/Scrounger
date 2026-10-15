@@ -21,7 +21,8 @@ public class WorldData : GameData
     private string NodeOffsetsPath =
         Path.Combine(Svc.PluginInterface.ConfigDirectory.FullName, "node_offsets.json");
 
-    public WorldData(IDataManager gameData, Logger log) : base(gameData, log)
+    public WorldData(IDataManager gameData, Logger log)
+        : base(gameData, log, Path.Combine(Svc.PluginInterface.ConfigDirectory.FullName, "fish_overrides.json"))
     {
         LoadLocationsFromFile();
         LoadOffsetsFromFile();

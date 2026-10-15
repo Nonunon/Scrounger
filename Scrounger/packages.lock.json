@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0-windows7.0": {
+      "DalamudPackager": {
+        "type": "Direct",
+        "requested": "[15.0.0, )",
+        "resolved": "15.0.0",
+        "contentHash": "411vwC8/X8Z/sQ2TI6v3SvOn66xFPeOjFn3Zn+h0d3Ox2t1kFm66AhDvmx/qcMwVrR+Hidxj0dadpQ2dgyXMBQ=="
+      },
+      "DotNet.ReproducibleBuilds": {
+        "type": "Direct",
+        "requested": "[1.2.39, )",
+        "resolved": "1.2.39",
+        "contentHash": "fcFN01tDTIQqDuTwr1jUQK/geofiwjG5DycJQOnC72i1SsLAk1ELe+apBOuZ11UMQG8YKFZG1FgvjZPbqHyatg=="
+      },
+      "OpenTK": {
+        "type": "Direct",
+        "requested": "[5.0.0-pre.13, )",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "+Zwcxfviwag6C9oDxnMr1Tulr0jV484x8suYCJlZ5luDeJdsAMI7UfPCIDEP9CUh2AJfT0Jv+81eDaggyVGotQ==",
+        "dependencies": {
+          "OpenTK.Audio.OpenAL": "5.0.0-pre.13",
+          "OpenTK.Compute": "5.0.0-pre.13",
+          "OpenTK.Core": "5.0.0-pre.13",
+          "OpenTK.Graphics": "5.0.0-pre.13",
+          "OpenTK.Input": "5.0.0-pre.13",
+          "OpenTK.Mathematics": "5.0.0-pre.13",
+          "OpenTK.Platform": "5.0.0-pre.13",
+          "OpenTK.Windowing.Common": "5.0.0-pre.13",
+          "OpenTK.Windowing.Desktop": "5.0.0-pre.13",
+          "OpenTK.Windowing.GraphicsLibraryFramework": "5.0.0-pre.13"
+        }
+      },
+      "System.Windows.Extensions": {
+        "type": "Direct",
+        "requested": "[10.0.0, )",
+        "resolved": "10.0.0",
+        "contentHash": "W2xPfgCUO83kPEtfkSsXpHT9KX4YiajDgtuJhjfOY18u58vMGyoBG44QIQCs2nTugmzsm506S/ur29k1WpE9+w=="
+      },
+      "JetBrains.Annotations": {
+        "type": "Transitive",
+        "resolved": "2024.3.0",
+        "contentHash": "ox5pkeLQXjvJdyAB4b2sBYAlqZGLh3PjSnP1bQNVx72ONuTJ9+34/+Rq91Fc0dG29XG9RgZur9+NcP4riihTug=="
+      },
+      "Microsoft.Extensions.DependencyInjection": {
+        "type": "Transitive",
+        "resolved": "9.0.2",
+        "contentHash": "ZffbJrskOZ40JTzcTyKwFHS5eACSWp2bUQBBApIgGV+es8RaTD4OxUG7XxFr3RIPLXtYQ1jQzF2DjKB5fZn7Qg==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2"
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions": {
+        "type": "Transitive",
+        "resolved": "9.0.2",
+        "contentHash": "MNe7GSTBf3jQx5vYrXF0NZvn6l7hUKF6J54ENfAgCO8y6xjN1XUmKKWG464LP2ye6QqDiA1dkaWEZBYnhoZzjg=="
+      },
+      "OpenTK.Audio.OpenAL": {
+        "type": "Transitive",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "q+YYwBHlP54/wjlapXRmv8Wy6IiCfoL8nz/+laMKXrlCxIBQ807dh2GowOc5Z6Sllr9I45GRQlqL8xbeniqrIQ==",
+        "dependencies": {
+          "OpenTK.Core": "[5.0.0-pre.13, 6.0.0-pre)",
+          "OpenTK.Mathematics": "[5.0.0-pre.13, 6.0.0-pre)"
+        }
+      },
+      "OpenTK.Compute": {
+        "type": "Transitive",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "qwQ2s2iXeb/NlbavnNSMUjCxxPCZrGDrhGBm2TysTeJpchICYzIgrIleY8kbuchSzAO8P/yTKm3sSF+yG1tEUA=="
+      },
+      "OpenTK.Core": {
+        "type": "Transitive",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "NohlYrmuR/H8dMMFzTEdTD7GgWa+mLpXzgnVa1Wixp8tzojdoalO+HYW/ixG1lzzYyBSMoENrZyRgt6njZxnkw=="
+      },
+      "OpenTK.Graphics": {
+        "type": "Transitive",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "oEbjB/r4EbhRKP9piOoklO8pseHK9mO7Bv4LQUyzFltdZ3tf+yD+L0l9Bf7lax7vHvYDB6bBqzMEp2/H0ucm+Q==",
+        "dependencies": {
+          "OpenTK.Core": "[5.0.0-pre.13, 6.0.0-pre)",
+          "OpenTK.Mathematics": "[5.0.0-pre.13, 6.0.0-pre)"
+        }
+      },
+      "OpenTK.Input": {
+        "type": "Transitive",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "TztSEwPrGAgUcGGiqXlWzP9QSSOci4B3XmuNpjkL8WvHRPxbYeIqfb/fFodxViCk6j9K68egPxFuQl70rL9ZKA=="
+      },
+      "OpenTK.Mathematics": {
+        "type": "Transitive",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "65qbZS49AfrTM6jtZ2RDTWAzLe13ywCXIiSP5QrAJLmZT6sQqHGd1LfFXLhx8Ccp77qy7qh/LHsxpUOlkgZTCg=="
+      },
+      "OpenTK.Platform": {
+        "type": "Transitive",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "OKCXd2/vjl3RRTzhcRTZdKWpmgEt7MI2cSs/9wEWB+z/lsddGA0uBchE3u8NG5V5ZvjyRiA9q7HvkFxPgJnt3A=="
+      },
+      "OpenTK.redist.glfw": {
+        "type": "Transitive",
+        "resolved": "3.3.8.39",
+        "contentHash": "JzjaBzHTyKenUk9CXOYIqA/v7VMnjFnqmd3SKR3I1YpuOTu/H3ohyy3o+ZfMCQ6IRKs7CLfSPXMarKLvwD0WgQ=="
+      },
+      "OpenTK.Windowing.Common": {
+        "type": "Transitive",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "RlEz7Boqalx38eCDYGA/YjN/KjwhJiR5nKWD0obMpVxnTDjmKk93kyJL0iT8n/9tIJxKgUHh1pEDs3Jr/cRH2Q==",
+        "dependencies": {
+          "OpenTK.Core": "[5.0.0-pre.13, 6.0.0-pre)",
+          "OpenTK.Mathematics": "[5.0.0-pre.13, 6.0.0-pre)"
+        }
+      },
+      "OpenTK.Windowing.Desktop": {
+        "type": "Transitive",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "Rx7LMx3n+Dz87qwSWYEk8qEhOsQ8w7lCOwzbsJZmGqcEfn4oyIGGbPvsxlEauHrUUF6Q99biN8jNmm8FGY4ITQ==",
+        "dependencies": {
+          "OpenTK.Core": "[5.0.0-pre.13, 6.0.0-pre)",
+          "OpenTK.Mathematics": "[5.0.0-pre.13, 6.0.0-pre)",
+          "OpenTK.Windowing.Common": "[5.0.0-pre.13, 6.0.0-pre)",
+          "OpenTK.Windowing.GraphicsLibraryFramework": "[5.0.0-pre.13, 6.0.0-pre)"
+        }
+      },
+      "OpenTK.Windowing.GraphicsLibraryFramework": {
+        "type": "Transitive",
+        "resolved": "5.0.0-pre.13",
+        "contentHash": "2VIh8AFWpGPo6oe5f+TGq4aUNjCXxyOnGNPTuIOt5pxWnwlvdC8YcBTRYfW3X73NHNdSr1K9Z6C8R265tDQOCQ==",
+        "dependencies": {
+          "OpenTK.Core": "[5.0.0-pre.13, 6.0.0-pre)",
+          "OpenTK.redist.glfw": "3.3.8.39"
+        }
+      },
+      "ecommons": {
+        "type": "Project"
+      },
+      "gatherbuddy.gamedata": {
+        "type": "Project",
+        "dependencies": {
+          "GatherBuddy.Levenshtein": "[1.0.0, )",
+          "OtterGui": "[1.0.0, )"
+        }
+      },
+      "gatherbuddy.levenshtein": {
+        "type": "Project"
+      },
+      "ottergui": {
+        "type": "Project",
+        "dependencies": {
+          "JetBrains.Annotations": "[2024.3.0, )",
+          "Microsoft.Extensions.DependencyInjection": "[9.0.2, )"
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 ﻿using ECommons.ImGuiMethods;
 using GatherBuddy.Classes;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Newtonsoft.Json;
 using OtterGui;
 using OtterGui.Raii;

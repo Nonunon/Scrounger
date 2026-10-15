@@ -14,7 +14,7 @@ public static unsafe class Teleporter
             return false;
         }
 
-        if (Svc.ClientState.LocalPlayer == null)
+        if (Svc.Objects.LocalPlayer == null)
             return true;
         teleport->UpdateAetheryteList();
 

@@ -324,9 +324,9 @@ namespace Scrounger.AutoGather
             if (!CheckConditions(Actions.SolidAge, config.SolidAge, slot.Item, slot))
                 return false;
             var yield = slot.Yield;
-            if (Svc.ClientState.LocalPlayer!.StatusList.Any(s => s.StatusId == Actions.Bountiful.EffectId))
+            if (Svc.Objects.LocalPlayer!.StatusList.Any(s => s.StatusId == Actions.Bountiful.EffectId))
                 yield -= 1;
-            if (Svc.ClientState.LocalPlayer!.StatusList.Any(s => s.StatusId == Actions.BountifulII.EffectId))
+            if (Svc.Objects.LocalPlayer!.StatusList.Any(s => s.StatusId == Actions.BountifulII.EffectId))
                 yield -= CalculateBountifulBonus(slot.Item);
             if (yield < config.SolidAge.MinYieldTotal)
                 return false;

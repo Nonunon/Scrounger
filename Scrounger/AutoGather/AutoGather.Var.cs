@@ -39,7 +39,7 @@ namespace Scrounger.AutoGather
         }
 
         public bool IsGathering
-            => Svc.Condition[ConditionFlag.Gathering] || Svc.Condition[ConditionFlag.Gathering42];
+            => Svc.Condition[ConditionFlag.Gathering] || Svc.Condition[ConditionFlag.ExecutingGatheringAction];
 
         public bool? LastNavigationResult { get; set; } = null;
         public Vector3 CurrentDestination { get; private set; } = default;
@@ -76,12 +76,12 @@ namespace Scrounger.AutoGather
             if (Svc.Condition[ConditionFlag.InFlight] || Svc.Condition[ConditionFlag.Diving])
                 return true;
 
-            if (!Scrounger.Config.UseFlying || Svc.ClientState.LocalPlayer == null)
+            if (!Scrounger.Config.UseFlying || Svc.Objects.LocalPlayer == null)
             {
                 return false;
             }
 
-            return Vector3.Distance(Svc.ClientState.LocalPlayer.Position, destination)
+            return Vector3.Distance(Svc.Objects.LocalPlayer.Position, destination)
                 >= Scrounger.Config.MountUpDistance;
         }
 
@@ -124,7 +124,7 @@ namespace Scrounger.AutoGather
 
         private static unsafe T* GetAddon<T>(string name) where T : unmanaged
         {
-            var addon = (AtkUnitBase*)Svc.GameGui.GetAddonByName(name);
+            var addon = (AtkUnitBase*)Svc.GameGui.GetAddonByName(name).Address;
             if (addon != null && addon->IsFullyLoaded() && addon->IsReady)
                 return (T*)addon;
             else
@@ -164,7 +164,7 @@ namespace Scrounger.AutoGather
         {
             get
             {
-                if (Svc.ClientState.LocalPlayer == null)
+                if (Svc.Objects.LocalPlayer == null)
                     return false;
                 if (Svc.Condition[ConditionFlag.BetweenAreas]
                  || Svc.Condition[ConditionFlag.BetweenAreas51]
@@ -179,11 +179,11 @@ namespace Scrounger.AutoGather
                  || Svc.Condition[ConditionFlag.Occupied]
                  || Svc.Condition[ConditionFlag.Occupied39]
                  || Svc.Condition[ConditionFlag.Unconscious]
-                 || Svc.Condition[ConditionFlag.Gathering42]
-                 || Svc.Condition[ConditionFlag.Unknown57] // Mounting up
+                 || Svc.Condition[ConditionFlag.ExecutingGatheringAction]
+                 || Svc.Condition[ConditionFlag.MountOrOrnamentTransition] // Mounting up
                  //Node is open? Fades off shortly after closing the node, can't use items (but can mount) while it's set
                  || Svc.Condition[85] && !Svc.Condition[ConditionFlag.Gathering]
-                 || Svc.ClientState.LocalPlayer.IsDead
+                 || Svc.Objects.LocalPlayer.IsDead
                  || Player.IsAnimationLocked)
                     return false;
 
@@ -192,7 +192,7 @@ namespace Scrounger.AutoGather
         }
 
         private static unsafe bool HasGivingLandBuff
-            => Svc.ClientState.LocalPlayer?.StatusList.Any(s => s.StatusId == 1802) ?? false;
+            => Svc.Objects.LocalPlayer?.StatusList.Any(s => s.StatusId == 1802) ?? false;
 
         public static unsafe bool IsGivingLandOffCooldown
             => ActionManager.Instance()->IsActionOffCooldown(ActionType.Action, Actions.GivingLand.ActionId);

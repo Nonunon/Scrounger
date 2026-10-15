@@ -202,11 +202,11 @@ namespace Scrounger.AutoGather
                         _activeItemList.MarkVisited(target);
 
                         if (gatherTarget.Item.NodeType is NodeType.Regular or NodeType.Ephemeral
-                            && VisitedNodes.Last?.Value != target.DataId
-                            && Scrounger.WorldData.NodeLocations[gatherTarget.Node.Id].ContainsKey(target.DataId) == true)
+                            && VisitedNodes.Last?.Value != target.BaseId
+                            && Scrounger.WorldData.NodeLocations[gatherTarget.Node.Id].ContainsKey(target.BaseId) == true)
                         {
                             FarNodesSeenSoFar.Clear();
-                            VisitedNodes.AddLast(target.DataId);
+                            VisitedNodes.AddLast(target.BaseId);
                             while (VisitedNodes.Count > (Scrounger.WorldData.NodeLocations[gatherTarget.Node.Id].Count <= 4 ? 2 : 4))
                                 VisitedNodes.RemoveFirst();
                         }
@@ -638,7 +638,7 @@ namespace Scrounger.AutoGather
                 return false;
             }
 
-            Chat.Instance.ExecuteCommand($"/gearset change \"{set}\"");
+            Chat.ExecuteCommand($"/gearset change \"{set}\"");
             TaskManager.DelayNext(Random.Shared.Next(500, 1500)); //Add a random delay to be less suspicious
             return true;
         }

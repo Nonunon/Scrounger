@@ -3,7 +3,7 @@ using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.Addon.Lifecycle;
 using System;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
+using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.AtkValueType;
 using System.Buffers.Binary;
 using System.Collections;
 using GatheringType = GatherBuddy.Enums.GatheringType;
@@ -103,16 +103,19 @@ namespace Scrounger.AutoGather
 
         private unsafe void Handler(AddonEvent type, AddonArgs args)
         {
+            if (type == AddonEvent.PreFinalize)
+            {
+                ResetArgs();
+                return;
+            }
+
             switch (args)
             {
                 case AddonSetupArgs sArgs:
-                    ProcessArgs(sArgs.AtkValueSpan);
+                    ProcessArgs(new Span<AtkValue>((void*)sArgs.AtkValues, (int)sArgs.AtkValueCount));
                     break;
                 case AddonRefreshArgs rArgs:
-                    ProcessArgs(rArgs.AtkValueSpan);
-                    break;
-                case AddonFinalizeArgs:
-                    ResetArgs();
+                    ProcessArgs(new Span<AtkValue>((void*)rArgs.AtkValues, (int)rArgs.AtkValueCount));
                     break;
             }
         }

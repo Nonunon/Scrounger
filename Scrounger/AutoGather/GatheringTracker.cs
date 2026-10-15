@@ -245,6 +245,7 @@ namespace Scrounger.AutoGather
 
             //n = 109; //Last selected slot
             n = 109; //Integrity
+            var previousIntegrity = Integrity;
             if (values[n].Type == ValueType.UInt)
                 Integrity = unchecked((int)values[n].UInt);
             else
@@ -259,6 +260,9 @@ namespace Scrounger.AutoGather
             //n = 112; //Up arrow on integrity
             //n = 113; //Undefined, unknown
 
+            //Revisit refills the node, so it counts as untouched again
+            if (Ready && Integrity == MaxIntegrity && Integrity > previousIntegrity + 1)
+                Touched = false;
             Touched = Touched || Integrity != MaxIntegrity;
             HiddenRevealed = HiddenRevealed || (Flags.Data & 0xff) != 0;
             Ready = true;

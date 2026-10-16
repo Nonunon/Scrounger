@@ -270,6 +270,8 @@ namespace Scrounger.AutoGather
             {
                 RevisitCount++;
                 Touched = false; //Revisit refills the node, so it counts as untouched again
+                Scrounger.Log.Information($"Revisit detected ({(refilled ? "integrity refilled" : "node type marker")}), "
+                  + $"integrity {previousIntegrity} -> {Integrity}/{MaxIntegrity}.");
             }
             Touched = Touched || Integrity != MaxIntegrity;
             HiddenRevealed = HiddenRevealed || (Flags.Data & 0xff) != 0;

@@ -6,6 +6,7 @@ using System.Linq;
 using ItemSlot = Scrounger.AutoGather.GatheringTracker.ItemSlot;
 using System.Collections.Generic;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using Scrounger.AutoGather.Helpers;
 using Scrounger.AutoGather.Lists;
 using Scrounger.Utils.Extensions;
@@ -133,6 +134,8 @@ namespace Scrounger.AutoGather
             if (NodeTracker.RevisitCount != _lastRevisitCount)
             {
                 _lastRevisitCount = NodeTracker.RevisitCount;
+                if (ActionSequence != null)
+                    Scrounger.Log.Information("Discarding the current rotation because of Revisit.");
                 ActionSequence = null;
             }
 
@@ -169,17 +172,19 @@ namespace Scrounger.AutoGather
                     {
                         if (ActionSequence == null)
                         {
+                            Scrounger.Log.Information($"Calculating rotation for {slot.Item.Name}: "
+                              + $"GP {Player.Object.CurrentGp}/{Player.Object.MaxGp}, integrity {NodeTracker.Integrity}/{NodeTracker.MaxIntegrity}.");
                             var task = RotationSolver.SolveAsync(slot, configPreset);
 
                             if (task.Wait(1))
                             {
-                                ActionSequence = task.Result.AsEnumerable().GetEnumerator();
+                                ActionSequence = LogRotation(task.Result).GetEnumerator();
                             }
                             else
                             {
                                 TaskManager.Enqueue(() =>
                                 {
-                                    if (task.IsCompleted) ActionSequence = task.Result.GetEnumerator();
+                                    if (task.IsCompleted) ActionSequence = LogRotation(task.Result).GetEnumerator();
                                     return task.IsCompleted;
                                 });
                                 AutoStatus = "Calculating best action sequence...";
@@ -230,6 +235,14 @@ namespace Scrounger.AutoGather
             {
                 EnqueueGatherItem(slot, target.Id);
             }
+        }
+
+        private static List<Actions.BaseAction?> LogRotation(IEnumerable<Actions.BaseAction?> rotation)
+        {
+            var steps = rotation.ToList();
+            var names = steps.Select(a => a == null ? "Gather" : Player.Job == Job.MIN ? a.Names.Miner : a.Names.Botanist);
+            Scrounger.Log.Information($"Rotation: {string.Join(" > ", names)}");
+            return steps;
         }
 
         private bool ShouldUseGivingLandOutOfOrder(Gatherable? desiredItem)

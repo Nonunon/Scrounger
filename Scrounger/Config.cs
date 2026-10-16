@@ -11,21 +11,23 @@ public class Config
 {
     public static Config Load()
     {
+        var file = Svc.PluginInterface.ConfigFile.FullName;
         try
         {
-            var file = Svc.PluginInterface.ConfigFile.FullName;
             if (!File.Exists(file))
                 return new Config();
-            
+
             var json = File.ReadAllText(file);
-            var config = JsonConvert.DeserializeObject<Config>(json);
-            if (config == null)
+            if (string.IsNullOrWhiteSpace(json))
                 return new Config();
-            
-            return config;
+
+            return JsonConvert.DeserializeObject<Config>(json)
+                ?? throw new JsonException("Config file deserialized to null.");
         }
-        catch
+        catch (Exception e)
         {
+            Scrounger.Log.Error($"Error loading config:\n{e}");
+            Utils.Functions.BackupUnreadableFile(file, "settings");
             return new Config();
         }
     }

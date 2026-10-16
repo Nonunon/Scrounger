@@ -107,7 +107,8 @@ public partial class AutoGatherListsManager : IDisposable
         catch (Exception e)
         {
             Scrounger.Log.Error($"Error deserializing auto gather lists:\n{e}");
-            ChatPrinter.PrintError($"[Scrounger] Auto gather lists failed to load and have been reset.");
+            Utils.Functions.BackupUnreadableFile(file.FullName, "gather lists");
+            ret._lists.Clear(); // Start clean instead of keeping whatever loaded before the error
             ret.Save();
         }
 

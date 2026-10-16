@@ -44,6 +44,28 @@ public static class Functions
         return new FileInfo(Path.Combine(dir.FullName, fileName));
     }
 
+    // Copies a save file that failed to load next to the original, so the defaults saved over it later don't destroy it.
+    public static string? BackupUnreadableFile(string path, string description)
+    {
+        try
+        {
+            if (!File.Exists(path))
+                return null;
+
+            var backup = $"{path}.unreadable-{DateTime.Now:yyyyMMdd-HHmmss}.bak";
+            File.Copy(path, backup, false);
+            Scrounger.Log.Warning($"Could not read {description}, a copy was saved to {backup}.");
+            ChatPrinter.PrintError($"Could not read your {description}, so defaults are in use. "
+              + $"The old file was kept as {Path.GetFileName(backup)}.");
+            return backup;
+        }
+        catch (Exception e)
+        {
+            Scrounger.Log.Error($"Could not back up {path}:\n{e}");
+            return null;
+        }
+    }
+
     public static bool CompareCi(string lhs, string rhs)
         => string.Compare(lhs, rhs, StringComparison.InvariantCultureIgnoreCase) == 0;
 

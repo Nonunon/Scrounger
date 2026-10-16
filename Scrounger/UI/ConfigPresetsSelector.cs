@@ -110,8 +110,17 @@ public class ConfigPresetsSelector : ItemSelector<ConfigPreset>
         var file = Utils.Functions.ObtainSaveFile(FileName);
         if (file != null && file.Exists)
         {
-            var text = File.ReadAllText(file.FullName);
-            items = JsonConvert.DeserializeObject<List<ConfigPreset>>(text);
+            try
+            {
+                var text = File.ReadAllText(file.FullName);
+                items = JsonConvert.DeserializeObject<List<ConfigPreset>>(text);
+            }
+            catch (Exception e)
+            {
+                Scrounger.Log.Error($"Error deserializing config presets:\n{e}");
+                Utils.Functions.BackupUnreadableFile(file.FullName, "config presets");
+                items = null;
+            }
         }
 
         if (items != null && items.Count > 0)

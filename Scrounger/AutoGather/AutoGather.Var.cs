@@ -114,6 +114,7 @@ namespace Scrounger.AutoGather
         public int LastIntegrity = 0;
         private BitVector32 LuckUsed;
         private int _lastRevisitCount;
+        private DateTime _revisitBuffWaitUntil = DateTime.MinValue;
         private bool WentHome;
 
         internal IEnumerable<GatherTarget> ItemsToGather => _activeItemList;

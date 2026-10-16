@@ -137,6 +137,28 @@ namespace Scrounger.AutoGather
                 if (ActionSequence != null)
                     Scrounger.Log.Information("Discarding the current rotation because of Revisit.");
                 ActionSequence = null;
+                _revisitBuffWaitUntil = DateTime.Now.AddSeconds(2);
+            }
+
+            // Buffs from before the Revisit can still be listed for a moment. The solver would treat them as active
+            // and plan no skills, so wait (briefly) for them to drop before planning.
+            if (_revisitBuffWaitUntil != DateTime.MinValue)
+            {
+                if (!HasNodeBuffs)
+                {
+                    Scrounger.Log.Information("Node buffs are clear after Revisit, picking skills.");
+                    _revisitBuffWaitUntil = DateTime.MinValue;
+                }
+                else if (DateTime.Now >= _revisitBuffWaitUntil)
+                {
+                    Scrounger.Log.Information("Node buffs are still active 2s after Revisit, continuing with them.");
+                    _revisitBuffWaitUntil = DateTime.MinValue;
+                }
+                else
+                {
+                    AutoStatus = "Waiting for buffs to clear after Revisit...";
+                    return;
+                }
             }
 
             //Use The Giving Land out of order to gather random crystals.
@@ -237,6 +259,15 @@ namespace Scrounger.AutoGather
             }
         }
 
+        private static readonly Actions.BaseAction[] NodeBuffActions =
+        [
+            Actions.TwelvesBounty, Actions.Yield1, Actions.Yield2, Actions.Gift1, Actions.Gift2,
+            Actions.Tidings, Actions.Bountiful, Actions.BountifulII, Actions.GivingLand,
+        ];
+
+        private static bool HasNodeBuffs
+            => Player.Status.Any(s => NodeBuffActions.Any(a => a.EffectId != 0 && a.EffectId == s.StatusId));
+
         private static List<Actions.BaseAction?> LogRotation(IEnumerable<Actions.BaseAction?> rotation)
         {
             var steps = rotation.ToList();
@@ -261,7 +292,7 @@ namespace Scrounger.AutoGather
             var amInstance = ActionManager.Instance();
             if (amInstance->GetActionStatus(ActionType.Action, act.ActionId) == 0)
             {
-                //ChatPrinter.Print("Action used: " + act.Name);
+                Scrounger.Log.Information($"Using {(Player.Job == Job.MIN ? act.Names.Miner : act.Names.Botanist)}.");
                 amInstance->UseAction(ActionType.Action, act.ActionId);
             }
         }

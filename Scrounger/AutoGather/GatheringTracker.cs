@@ -21,6 +21,7 @@ namespace Scrounger.AutoGather
         public bool Ready { get => _ready; private set { _ready = value; } }
         public GatheringType NodeType { get; private set; }
         public bool Revisit { get; private set; }
+        public int RevisitCount { get; private set; } //Increments every time a Revisit is detected; never reset
         public bool QuickGatheringAllowed { get; private set; }
         public bool QuickGatheringChecked { get; private set; }
         public bool QuickGatheringInProgress { get; private set; }
@@ -124,6 +125,8 @@ namespace Scrounger.AutoGather
         {
             if (values.Length < 111)
                 return;
+
+            var wasRevisit = Revisit;
 
             var n = 0; //Node type 2=logging 3=quarrying 4=harvesting 5=mining; 0 after revisit
             if (values[n].Type == ValueType.UInt && values[n].UInt is 0 or > 1 and < 6)
@@ -260,9 +263,14 @@ namespace Scrounger.AutoGather
             //n = 112; //Up arrow on integrity
             //n = 113; //Undefined, unknown
 
-            //Revisit refills the node, so it counts as untouched again
-            if (Ready && Integrity == MaxIntegrity && Integrity > previousIntegrity + 1)
-                Touched = false;
+            //Revisit is reported through the node type value. As a fallback, a refill straight back to max also counts,
+            //since Ageless Words / Solid Reason and Wise only restore 1 integrity and are never used to reach max.
+            var refilled = Ready && Integrity == MaxIntegrity && Integrity > previousIntegrity + 1;
+            if (Revisit && !wasRevisit || refilled)
+            {
+                RevisitCount++;
+                Touched = false; //Revisit refills the node, so it counts as untouched again
+            }
             Touched = Touched || Integrity != MaxIntegrity;
             HiddenRevealed = HiddenRevealed || (Flags.Data & 0xff) != 0;
             Ready = true;

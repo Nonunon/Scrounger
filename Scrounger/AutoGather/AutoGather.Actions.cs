@@ -129,11 +129,12 @@ namespace Scrounger.AutoGather
         {
             if (LuckUsed[1] && !LuckUsed[2] && NodeTracker.Revisit) LuckUsed = new(0);
 
-            // Integrity going up means Revisit refilled the node (or Wise was used, which resets the rotation anyway),
-            // so the old rotation no longer applies
-            if (NodeTracker.Integrity > LastIntegrity)
+            // Revisit refilled the node, so the old rotation no longer applies
+            if (NodeTracker.RevisitCount != _lastRevisitCount)
+            {
+                _lastRevisitCount = NodeTracker.RevisitCount;
                 ActionSequence = null;
-            LastIntegrity = NodeTracker.Integrity;
+            }
 
             //Use The Giving Land out of order to gather random crystals.
             if (ShouldUseGivingLandOutOfOrder(target.Item))

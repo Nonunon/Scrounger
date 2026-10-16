@@ -113,6 +113,7 @@ namespace Scrounger.AutoGather
         public int LastCollectability = 0;
         public int LastIntegrity = 0;
         private BitVector32 LuckUsed;
+        private int _lastRevisitCount;
         private bool WentHome;
 
         internal IEnumerable<GatherTarget> ItemsToGather => _activeItemList;
